@@ -17,7 +17,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @GetMapping("/{value}")
+    @GetMapping("product/{value}")
     ResponseEntity<List<Product>> getProducts(@PathVariable("value") String value) {
         return new ResponseEntity<List<Product>>(productService.getProducts(value), HttpStatus.OK);
     }
