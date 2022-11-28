@@ -1,6 +1,7 @@
 package com.example.demo.controllers;
 
 import com.example.demo.entities.Product;
+import com.example.demo.entities.ProductsList;
 import com.example.demo.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,7 +19,12 @@ public class ProductController {
     private ProductService productService;
 
     @GetMapping("products/{value}")
-    ResponseEntity<List<Product>> getProducts(@PathVariable("value") String value) {
+    ResponseEntity<List<Product>> getProductsByApi(@PathVariable("value") String value) {
         return new ResponseEntity<List<Product>>(productService.getProducts(value), HttpStatus.OK);
+    }
+
+    @GetMapping("/products")
+    ResponseEntity<List<ProductsList>> findAll() {
+        return new ResponseEntity<List<ProductsList>>(productService.findAll(), HttpStatus.OK);
     }
 }

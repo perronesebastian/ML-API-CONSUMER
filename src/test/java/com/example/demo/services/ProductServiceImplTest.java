@@ -22,52 +22,69 @@ class ProductServiceImplTest {
     @Mock
     private MercadoLibreClientRest clientRest;
 
-    @Mock
+    @InjectMocks
     private ProductServiceImpl productService;
-
-    private ProductsList productsList;
-    private Product product;
-    private Product product1;
-    private Product product2;
 
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        product = new Product();
-        product.setPrice(5000.0);
-        product.setCondition("new");
-        product.setId("123");
-        product.setTitle("moto");
 
-        product1 = new Product();
-        product1.setPrice(10000.0);
-        product1.setCondition("new");
-        product1.setId("124");
-        product1.setTitle("moto g20");
+    }
 
-        product2 = new Product();
-        product2.setPrice(10000.0);
+
+
+    @Test
+    void getProductsExceptionAmount() {
+        when(clientRest.getProducts("moto")).thenReturn(initProductsTest1());
+        assertThrows(Exception.class, () -> productService.getProducts("moto"));
+    }
+
+    @Test
+    void getProductsException() {
+        when(clientRest.getProducts("moto")).thenReturn(initProductsTest2());
+        List<Product> response = productService.getProducts("moto");
+        assertEquals(response.size(), 1);
+    }
+
+    private ProductsList initProductsTest1() {
+        Product product2 = new Product();
+        product2.setPrice(2000.0);
         product2.setCondition("new");
         product2.setId("125");
         product2.setTitle("moto CBR");
 
-
-        productsList = new ProductsList();
+        ProductsList productsList = new ProductsList();
         List<Product> products = new ArrayList<>();
-        products.add(product);
-        products.add(product1);
         products.add(product2);
-
 
         productsList.setSite_id("site_id_prueba");
         productsList.setResults(products);
+        return productsList;
     }
 
-    @Test
-    void getProducts() {
-        when(clientRest.getProducts("moto")).thenReturn(productsList);
-        assertNotNull(productService.getProducts("moto"));
+    private ProductsList initProductsTest2() {
+
+        Product product = new Product();
+        product.setPrice(5000.0);
+        product.setCondition("new");
+        product.setId("125");
+        product.setTitle("moto CBR");
+
+        Product product2 = new Product();
+        product2.setPrice(5000.0);
+        product2.setCondition("old");
+        product2.setId("125");
+        product2.setTitle("moto CBR");
+
+        ProductsList productsList = new ProductsList();
+        List<Product> products = new ArrayList<>();
+        products.add(product2);
+        products.add(product);
+
+        productsList.setSite_id("site_id_prueba");
+        productsList.setResults(products);
+        return productsList;
     }
 
 }
